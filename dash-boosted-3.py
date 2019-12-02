@@ -7,7 +7,7 @@ from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_table
-
+import dash_bootstrap_components as dbc
 import pandas as pd
 import random
 import dash_table_experiments
@@ -30,7 +30,7 @@ get_colors = lambda n: list(map(lambda i: "#" + "%06x" % random.randint(0, 0xFFF
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets, )
 app.config['suppress_callback_exceptions'] = True
 
 app.layout = html.Div([
@@ -39,7 +39,10 @@ app.layout = html.Div([
         children=html.Div([
             'Arrate e Solte Aqui O Orderlines Descompactado ou ',
             html.A('Clique para selecionar')
-        ]),
+            
+        ]
+        
+        ),
         style={
             'width': '100%',
             'height': '60px',
@@ -53,8 +56,12 @@ app.layout = html.Div([
         # Allow multiple files to be uploaded
         multiple=True
     ),
+    
     html.Div(id='output-data-upload'),
+
 ], style={'marginLeft': 50, 'marginRight': 50})
+
+
 
 
 def parse_contents(contents, filename, date):
@@ -65,7 +72,7 @@ def parse_contents(contents, filename, date):
         if 'csv' in filename:
             # Assume that the user uploaded a CSV file
             
-             
+            
             
             df = pd.read_csv(
                 io.StringIO(decoded.decode('latin-1')))
@@ -81,7 +88,7 @@ def parse_contents(contents, filename, date):
             df1 = df
             #df2 = df
             
-
+            df1['Product Category'] = df1['Product Category'].str.upper() 
             df1.rename(columns={"Order Type": "OrderType"}, inplace=True)
             df1.rename(columns={df1.columns[40]:'ProcessFinishTime'}, inplace=True)
             df1.rename(columns={df1.columns[30]:'ProcessStartTime'}, inplace=True)
@@ -484,6 +491,9 @@ def parse_contents(contents, filename, date):
             tabelaupph2 = tabelaupph.groupby('OrderType').sum().round(2)
             tabelaupph2.reset_index(inplace=True)
             
+            
+    
+            
         elif 'xls' in filename:
             # Assume that the user uploaded an excel file
             df = pd.read_excel(io.BytesIO(decoded))
@@ -520,7 +530,7 @@ html.Div([
          style_as_list_view=True,
         style_cell={'padding': '5px','fontSize': 12, 'textAlign': 'center'},
         style_header={
-            'backgroundColor': 'white',
+            'backgroundColor': 'Gainsboro',
             'fontWeight': 'bold',
             'fontSize': 12},
 
@@ -547,15 +557,25 @@ html.Div([
         data=dfordertype.to_dict('records'),
         editable=True,
         style_table={'textAlign': 'center'},
-        style_as_list_view=True,
+        style_as_list_view=False,
+        style_header={
+            'backgroundColor': 'Gainsboro',
+            'fontWeight': 'bold',
+            'fontSize': 12},
     ),
     
-]),
+],style={'itemsAlign': 'center',
+                 'align-items': 'center',
+                 'fontSize': 12,
+                 'width': '100%',
+                 'display': 'flex',
+                 'align-items': 'center',
+                 'justify-content': 'center'}),   
+
        
 
 
-        
-        
+            
         
         
         
@@ -641,7 +661,7 @@ html.Div([
                  style_as_list_view=True,
                 style_cell={'padding': '5px','fontSize': 12},
                 style_header={
-                    'backgroundColor': 'white',
+                    'backgroundColor': 'Gainsboro',
                     'fontWeight': 'bold',
                     'fontSize': 12},
 
@@ -707,6 +727,5 @@ def update_columns(timestamp, rows):
             row['ETA_Geral'] = 'NA'
     return rows
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run_server()
