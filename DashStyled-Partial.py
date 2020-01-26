@@ -851,86 +851,142 @@ html.Div([
 
  
     
-    
+#Medias moveis<
 html.Div([
-   html.H3(children = "Médias Mveis (10, 20 e 30 periodos)",
-    style = {'textAlign' : 'center',}),    
+    html.Div([ 
 
-], style={'marginBottom': 50, 'marginTop': 25}), 
-    
-    dcc.Graph(
-        id = 'GrapGo4',
-        figure = figuremm),
-
-
-html.Div([
-    
-html.Div([
-   html.H3(children = "Médias Móveis - 10 Intervalos por canal",
-    style = {'textAlign' : 'center',}),    
-
-], style={'marginBottom': 50, 'marginTop': 25}),
-    
-dcc.Graph(
-    id = 'GrapGo4',
-    figure = figure7),
-
-
-    
-html.Div([
-    html.P(""),
-    html.H3(children = "Unidades Recebidas Vs Processadas por Hora",
-    style = {'textAlign' : 'center',}),    
-
-], style={'marginBottom': 50, 'marginTop': 25}),
-
-    dcc.Graph(
-    id = 'GrapGo4',
-    figure = figurefd),
-    
-]),
-
-    #Tabela UPPH
-    
-        html.Div([
-           html.H2(children = "Tabela De Desempenho Por Pessoa / Hora",
+            html.H3(children = "Médias Mveis (10, 20 e 30 periodos)",
             style = {'textAlign' : 'center',}),
-        ]),    
-        html.Div([
-            dash_table.DataTable(
+
+            html.Br(""),
+
+            dcc.Graph(id = 'GrapGo4',figure = figuremm),
+            ],style={'textAlign': 'center',
+                     'align-items': 'center',
+                     'fontSize': 12,
+                     'width': '100%',
+                     'display': 'block',
+                     'align-items': 'center',
+                     'justify-content': 'center',
+                    'boxShadow': '0 0 14px 0 rgba(0, 0, 0, 0.2)',
+                     'padding': '30px 20px'}),
+
+            ],style={'textAlign': 'center',
+                    'marginTop': '15px',
+                    'display': 'block'}), 
+
+#Medias moveis/>
+
+
+
+#Media 10 intervalos<
+html.Div([
+    html.Div([ 
+
+            html.H3(children = "Médias Móveis - 10 Intervalos por canal",
+            style = {'textAlign' : 'center',}),
+
+            html.Br(""),
+
+            dcc.Graph(id = 'GrapGo4',figure = figure7),
+            ],style={'textAlign': 'center',
+                     'align-items': 'center',
+                     'fontSize': 12,
+                     'width': '100%',
+                     'display': 'block',
+                     'align-items': 'center',
+                     'justify-content': 'center',
+                    'boxShadow': '0 0 14px 0 rgba(0, 0, 0, 0.2)',
+                     'padding': '30px 20px'}),
+
+            ],style={'textAlign': 'center',
+                    'marginTop': '15px',
+                    'display': 'block'}), 
+
+#Media 10 intervalos/>
+
+
+
+
+#Unidades Recebidas Vs Processadas/hora<
+html.Div([
+    html.Div([ 
+
+            html.H3(children = "Unidades Recebidas Vs Processadas por Hora",
+            style = {'textAlign' : 'center',}),
+
+            html.Br(""),
+
+            dcc.Graph(id = 'GrapGo4',figure = figurefd),
+            ],style={'textAlign': 'center',
+                     'align-items': 'center',
+                     'fontSize': 12,
+                     'width': '100%',
+                     'display': 'block',
+                     'align-items': 'center',
+                     'justify-content': 'center',
+                    'boxShadow': '0 0 14px 0 rgba(0, 0, 0, 0.2)',
+                     'padding': '30px 20px'}),
+
+            ],style={'textAlign': 'center',
+                    'marginTop': '15px',
+                    'display': 'block'}), 
+#Unidades Recebidas Vs Processadas/hora/>
+
+
+
+#Tabela UPPH<
+
+html.Div([
+html.Div([ 
+    html.H2(children = "Tabela De Desempenho Por Pessoa / Hora",
+        style = {'textAlign' : 'center',}),
+
+    html.Br(""),
+  
+        
+     dash_table.DataTable(
                 id='tableUPPH',
                 columns=[{"name": i, "id": i} for i in tabelaupph2.columns],
                  data=tabelaupph2.to_dict('records'),
                 style_table={'textAlign': 'center'},
                  style_as_list_view=True,
-                style_cell={'padding': '5px','fontSize': 12},
+                style_cell={'padding': '5px','fontSize': 12, 'textAlign': 'center'},
                 style_header={
                     'backgroundColor': 'Gainsboro',
                     'fontWeight': 'bold',
                     'fontSize': 12},
 
 
-            ),
+    ),
 
-                ],style={'textAlign': 'center',
-                         'align-items': 'center',
-                         'fontSize': 12,
-                         'width': '100%',
-                         'display': 'flex',
-                         'align-items': 'center',
-                         'justify-content': 'center',
-                        'padding': '15px'}),       
+        ],style={'textAlign': 'center',
+                 'align-items': 'center',
+                 'fontSize': 12,
+                 'width': '100%',
+                 'display': 'block',
+                 'align-items': 'center',
+                 'justify-content': 'center',
+                'boxShadow': '0 0 14px 0 rgba(0, 0, 0, 0.2)',
+                 'padding': '30px 20px'}),
+    
+        ],style={'textAlign': 'center',
+                'marginTop': '15px',
+                'display': 'block'}),
+
+#Tabela UPPH/>
+   
 
 
 
 
-], style={'marginBottom': 50, 'marginTop': 25}),
+], style={'marginBottom': 50, 'marginTop': 25, 'textAlign': 'center'}),
 
     dcc.Graph(
     id = 'GrapGo4',
     figure = figure52),
 
-], style={'marginLeft': 50, 'marginRight': 50, 'display':'block'})
+], style={'marginLeft': 50, 'marginRight': 50, 'display':'block', 'textAlign': 'center'})
 
 
 
