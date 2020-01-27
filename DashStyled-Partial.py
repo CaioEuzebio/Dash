@@ -33,7 +33,7 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets, )
 app.config['suppress_callback_exceptions'] = True
 
-app.layout = html.Div([  html.H1('Dashboard Para Gestão de Operações', style = {'textAlign' : 'center',}),
+app.layout = html.Div([  html.H1('Dashboard Para Gestão de Operações', style = {'textAlign' : 'center', 'align-items': 'center', 'display': 'block'}),
     dcc.Store(id='session', storage_type='session'),
     dcc.Upload(
         id='upload-data',
@@ -41,18 +41,24 @@ app.layout = html.Div([  html.H1('Dashboard Para Gestão de Operações', style 
             'Arrate e Solte Aqui O Orderlines Descompactado ou ',
             html.A('Clique para selecionar')
             
-        ]
+        ], style= {'align-items': 'center',
+                    'display': 'block'},
         
         ),
         style={
-            'width': '100%',
-            'height': '60px',
-            'lineHeight': '60px',
-            'borderWidth': '1px',
+            'width': '96%',
+            'height': '10px',
+            'lineHeight': '10px',
+            'borderWidth': '2px',
             'borderStyle': 'dashed',
             'borderRadius': '5px',
             'textAlign': 'center',
-            'margin': '10px'
+            'margin': '10px',
+            'boxShadow': '0 0 14px 0 rgba(0, 0, 0, 0.2)',
+            'padding': '30px 20px',
+            'align-items': 'center',
+            'display': 'block'
+            
         },
         # Allow multiple files to be uploaded
         multiple=True
@@ -60,7 +66,13 @@ app.layout = html.Div([  html.H1('Dashboard Para Gestão de Operações', style 
     
     html.Div(id='output-data-upload'),
 
-], style={'marginLeft': 50, 'marginRight': 50})
+], style={
+            'boxShadow': '0 0 14px 0 rgba(0, 0, 0, 0.2)', 
+            'align-items': 'center', 
+            'display': 'block',
+            'textAlign': 'center'
+            ,
+    })
 
 
 
@@ -578,9 +590,12 @@ def parse_contents(contents, filename, date):
 
         # For debugging, display the raw contents provided by the web browser
         html.Div('Conteudo Bruto: '),
-        html.Pre(contents[0:200] + '...', style={
+        html.Pre(contents[0:200] + '...', 
+            style={
             'whiteSpace': 'pre-wrap',
-            'wordBreak': 'break-all'
+            'wordBreak': 'break-all',
+            'align-items': 'center',
+            'display': 'block'
         }),
         
 
@@ -978,15 +993,47 @@ html.Div([
    
 
 
+#UPPH Chart<
+html.Div([
+    html.Div([ 
+
+            html.H3(children = "Unidades Recebidas Vs Processadas por Hora",
+            style = {'textAlign' : 'center',}),
+
+            html.Br(""),
+
+            dcc.Graph(id = 'GrapGo4',figure = figure52)
+            ],style={'textAlign': 'center',
+                     'align-items': 'center',
+                     'fontSize': 12,
+                     'width': '100%',
+                     'display': 'block',
+                     'align-items': 'center',
+                     'justify-content': 'center',
+                    'boxShadow': '0 0 14px 0 rgba(0, 0, 0, 0.2)',
+                     'padding': '30px 20px'}),
+
+            ],style={'textAlign': 'center',
+                    'marginTop': '15px',
+                    'display': 'block'}), 
+#UPPH chrta/>
 
 
-], style={'marginBottom': 50, 'marginTop': 25, 'textAlign': 'center'}),
 
-    dcc.Graph(
-    id = 'GrapGo4',
-    figure = figure52),
+], style={'marginBottom': 50, 
+            'marginTop': 50, 
+            'textAlign': 'center', 
+            'padding': '30px 20px', 
+            'align-items': 'center' }),
 
-], style={'marginLeft': 50, 'marginRight': 50, 'display':'block', 'textAlign': 'center'})
+
+
+], style={'marginLeft': 50, 
+            'marginRight': 50, 
+            'display':'block', 
+            'textAlign': 'center', 
+            'align-items': 'center',
+            'padding': '30px 20px'})
 
 
 
