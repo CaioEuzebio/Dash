@@ -33,20 +33,27 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets, )
 app.config['suppress_callback_exceptions'] = True
 
-app.layout = html.Div([  html.H1('Dashboard Para Gestão de Operações', style = {'textAlign' : 'center', 'align-items': 'center', 'display': 'block'}),
+app.layout = html.Div([
+   
+        
+    html.Div([html.H1('Dashboard Operacional Jundiai - SP')]),
+    dcc.Location(id='url', refresh=False),
     dcc.Store(id='session', storage_type='session'),
-    dcc.Upload(
+    
+                       dcc.Upload(
         id='upload-data',
         children=html.Div([
             'Arrate e Solte Aqui O Orderlines Descompactado ou ',
             html.A('Clique para selecionar')
             
         ], style= {'align-items': 'center',
-                    'display': 'block'},
+                    'display': 'block',
+                  'marginLeft': 50,
+                  'marginRight': 50},
         
         ),
         style={
-            'width': '96%',
+            'width': '98%',
             'height': '10px',
             'lineHeight': '10px',
             'borderWidth': '2px',
@@ -57,7 +64,8 @@ app.layout = html.Div([  html.H1('Dashboard Para Gestão de Operações', style 
             'boxShadow': '0 0 14px 0 rgba(0, 0, 0, 0.2)',
             'padding': '30px 20px',
             'align-items': 'center',
-            'display': 'block'
+            'display': 'block',
+            'displayInline': 'block'
             
         },
         # Allow multiple files to be uploaded
@@ -70,8 +78,9 @@ app.layout = html.Div([  html.H1('Dashboard Para Gestão de Operações', style 
             'boxShadow': '0 0 14px 0 rgba(0, 0, 0, 0.2)', 
             'align-items': 'center', 
             'display': 'block',
-            'textAlign': 'center'
-            ,
+            'textAlign': 'center',
+            'flexDirection': 'row'
+            
     })
 
 
@@ -110,7 +119,7 @@ def parse_contents(contents, filename, date):
             dforder = df1.groupby('Order No').sum().round(2)
             dforder = df1.pivot_table(index='Order No', aggfunc='sum').round(2)
 
-            dfmedir = df1[['Order No', 'OrderType','ProcessStartTime','ProcessFinishTime']]
+            dfmedir = df1[['Order No', 'OrderType','ProcessStartTime','ProcessFinishTime', 'Product Category', 'Cut Off Date', 'Cut Off Time']]
             dfmedir['UnidadesProcessadas'] = 0
 
             #dfmedir.drop(['index'], axis=1, inplace=True)
@@ -288,14 +297,14 @@ def parse_contents(contents, filename, date):
             
             
 
-            dgbydates = df1.groupby(['Cut Off Date', 'Cut Off Time','Order No', 'OrderType']).sum().round(2)
+            dgbydates = df1.groupby(['Cut Off Date','Order No', 'OrderType']).sum().round(2)
             dgbydates.reset_index(inplace=True)
             dgbydates.drop(['Line', 'PickNO','Etch Line','HoraDrop', 'UnidadesProcessadas' ],axis=1, inplace=True)
 
             dgbydates = pd.merge(dgbydates, dfmedir[['Order No','Unidades Pendentes']], on='Order No', how='left')
             dgbydates = pd.merge(dgbydates, dfmedir[['Order No','Time Proc Seg']], on='Order No', how='left')
 
-            tabelaback = dgbydates.groupby(['Cut Off Date','Cut Off Time','OrderType']).sum()
+            tabelaback = dgbydates.groupby(['Cut Off Date','OrderType']).sum()
             tabelaback['Unidades Processadas'] = (tabelaback['Qty'] - tabelaback['Unidades Pendentes']).round(2)
             tabelaback['Horas Treabalhadas'] = (tabelaback['Time Proc Seg'] / 3600).round(2)
             tabelaback['UPH'] = (tabelaback['Unidades Processadas'] / tabelaback['Horas Treabalhadas']).round(2)
@@ -308,13 +317,58 @@ def parse_contents(contents, filename, date):
 
             #Prod by cut off
 
-            dfprod = df1.groupby(['Product Category', 'Cut Off Date', 'Cut Off Time']).sum()
+            dfprod = dfmedir.groupby(['Product Category', 'Cut Off Date']).sum()
             dfprod.reset_index(inplace=True)
             dfprod['Unidades Pendentes'] = dfprod['Qty'] - dfprod['UnidadesProcessadas']
+            dfprod.drop(['Order No', 'Time Proc Seg', 'Horas Trabalhadas', 'Hora', 'HoraDrop'],axis=1, inplace=True)
         
             
             #tabelaordertype.drop(['UPH_BPI_vs_Perfil', 'Head_Disponível', 'ETA_BPI_vs_Head'], axis=1, inplace=True)
             
+            #Tabela de Perfil
+
+
+            dfperfil = df1.groupby(['Order No', 'OrderType', 'PartNo']).sum()
+
+            dfperfil2 = dfperfil
+
+            dfperfil2.drop(['Line', 'Line','Qty', 'PickNO', 'Etch Line', 'UnidadesProcessadas', 'HoraDrop'],axis=1, inplace=True)
+            dfperfil2.reset_index(inplace=True)
+
+            dfperfil2.drop(['Order No'], axis=1, inplace=True)
+
+            dfperfil2 = dfperfil2.drop_duplicates()
+
+
+            #MPNs por tipo de ordem.
+            dforderbypn = dfperfil2.groupby(['OrderType']).count()
+
+            dfqtyporcanal = df1.groupby(['OrderType']).sum()
+
+            dforderbypn.reset_index(inplace=True)
+            dfqtyporcanal.reset_index(inplace=True)
+
+            dforderbypn = pd.merge(dforderbypn, dfqtyporcanal[['OrderType','Qty']], on='OrderType', how='left')
+
+
+            dfqtyordens = df1.groupby(['Order No', 'OrderType']).sum()
+            dfqtyordens.reset_index(inplace=True)
+
+            dfqtyordens.drop(['Line', 'Line','Qty', 'PickNO', 'Etch Line', 'UnidadesProcessadas', 'HoraDrop'],axis=1, inplace=True)
+
+            dfqtyordens = dfqtyordens.drop_duplicates()
+
+            dfqtyordensd = dfqtyordens.groupby('OrderType').count()
+            dfqtyordensd.reset_index(inplace=True)
+
+
+            dforderbypn = pd.merge(dforderbypn, dfqtyordensd[['OrderType','Order No']], on='OrderType', how='left')
+
+            dforderbypn = dforderbypn.rename(columns = {"PartNo": "Total MPNs", 
+            "Order No":"Total Ordens"})
+
+            dforderbypn['Unidades Por DN'] =  (dforderbypn['Qty'] / dforderbypn['Total Ordens']).round(2)
+            dforderbypn['MPNs Por DN'] =  (dforderbypn['Total MPNs'] / dforderbypn['Total Ordens']).round(2)
                 
             
             
@@ -601,8 +655,54 @@ def parse_contents(contents, filename, date):
             'whiteSpace': 'pre-wrap',
             'wordBreak': 'break-all',
             'align-items': 'center',
-            'display': 'block'
+            'display': 'block',
+            'padding': '30px 20px'
         }),
+        
+
+
+        
+#Tabela De Perfil Por Canal<
+
+html.Div([
+html.Div([ 
+
+       html.H2(children = "Tabela De Perfil Por Canal",
+        style = {'textAlign' : 'center',}),
+
+    html.Br(""),
+  
+        
+   dash_table.DataTable(
+        id='table1',
+        columns=[{"name": i, "id": i} for i in dforderbypn.columns],
+         data=dforderbypn.to_dict('records'),
+        style_table={'textAlign': 'center'},
+         style_as_list_view=True,
+        style_cell={'padding': '5px','fontSize': 12, 'textAlign': 'center'},
+        style_header={
+            'backgroundColor': 'Gainsboro',
+            'fontWeight': 'bold',
+            'fontSize': 12},
+
+
+    ),
+
+        ],style={'textAlign': 'center',
+                 'align-items': 'center',
+                 'fontSize': 12,
+                 'width': '100%',
+                 'display': 'block',
+                 'align-items': 'center',
+                 'justify-content': 'center',
+                'boxShadow': '0 0 14px 0 rgba(0, 0, 0, 0.2)',
+                 'padding': '30px 20px'}),
+    
+        ],style={'textAlign': 'center' }),      
+             
+#Tabela De Perfil Por Canal/>        
+
+        
         
 
 
@@ -642,7 +742,7 @@ html.Div([
                 'boxShadow': '0 0 14px 0 rgba(0, 0, 0, 0.2)',
                  'padding': '30px 20px'}),
     
-        ],style={'textAlign': 'center'}),      
+        ],style={'textAlign': 'center', 'marginTop': '15px'}),      
         
 
         
@@ -739,7 +839,49 @@ html.Div([
         
 # Tabela Gerenciamento de Backlog/>
 
- 
+#Tabela UPPH<
+
+html.Div([
+html.Div([ 
+    html.H2(children = "Tabela De Desempenho Por Pessoa / Hora",
+        style = {'textAlign' : 'center',}),
+
+    html.Br(""),
+  
+        
+     dash_table.DataTable(
+                id='tableUPPH',
+                columns=[{"name": i, "id": i} for i in tabelaupph2.columns],
+                 data=tabelaupph2.to_dict('records'),
+                style_table={'textAlign': 'center'},
+                 style_as_list_view=True,
+                style_cell={'padding': '5px','fontSize': 12, 'textAlign': 'center'},
+                style_header={
+                    'backgroundColor': 'Gainsboro',
+                    'fontWeight': 'bold',
+                    'fontSize': 12},
+
+
+    ),
+
+        ],style={'textAlign': 'center',
+                 'align-items': 'center',
+                 'fontSize': 12,
+                 'width': '100%',
+                 'display': 'block',
+                 'align-items': 'center',
+                 'justify-content': 'center',
+                'boxShadow': '0 0 14px 0 rgba(0, 0, 0, 0.2)',
+                 'padding': '30px 20px'}),
+    
+        ],style={'textAlign': 'center',
+                'marginTop': '15px',
+                'display': 'block'}),
+
+#Tabela UPPH/>
+        
+        
+        
         
 #Mos Prod hora estacao & prod hora operador<
 
@@ -997,47 +1139,6 @@ html.Div([
 #Unidades Recebidas Vs Processadas/hora/>
 
 
-
-#Tabela UPPH<
-
-html.Div([
-html.Div([ 
-    html.H2(children = "Tabela De Desempenho Por Pessoa / Hora",
-        style = {'textAlign' : 'center',}),
-
-    html.Br(""),
-  
-        
-     dash_table.DataTable(
-                id='tableUPPH',
-                columns=[{"name": i, "id": i} for i in tabelaupph2.columns],
-                 data=tabelaupph2.to_dict('records'),
-                style_table={'textAlign': 'center'},
-                 style_as_list_view=True,
-                style_cell={'padding': '5px','fontSize': 12, 'textAlign': 'center'},
-                style_header={
-                    'backgroundColor': 'Gainsboro',
-                    'fontWeight': 'bold',
-                    'fontSize': 12},
-
-
-    ),
-
-        ],style={'textAlign': 'center',
-                 'align-items': 'center',
-                 'fontSize': 12,
-                 'width': '100%',
-                 'display': 'block',
-                 'align-items': 'center',
-                 'justify-content': 'center',
-                'boxShadow': '0 0 14px 0 rgba(0, 0, 0, 0.2)',
-                 'padding': '30px 20px'}),
-    
-        ],style={'textAlign': 'center',
-                'marginTop': '15px',
-                'display': 'block'}),
-
-#Tabela UPPH/>
    
 
 
