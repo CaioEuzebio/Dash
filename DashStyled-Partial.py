@@ -667,7 +667,7 @@ def parse_contents(contents, filename, date):
 html.Div([
 html.Div([ 
 
-       html.H2(children = "Tabela De Perfil Por Canal",
+       html.H2(children = "Perfil Por Canal",
         style = {'textAlign' : 'center',}),
 
     html.Br(""),
@@ -711,7 +711,7 @@ html.Div([
 html.Div([
 html.Div([ 
 
-       html.H2(children = "Tabela De Desempenho Por Canal",
+       html.H2(children = "UPH / ETA  Médio Por Canal",
         style = {'textAlign' : 'center',}),
 
     html.Br(""),
@@ -755,7 +755,7 @@ html.Div([
 html.Div([
 html.Div([ 
 
-        html.H2(children = "Tabela De Suporte Ao Planejamento",
+        html.H2(children = "Planner - Suporte",
         style = {'textAlign' : 'center',}),
 
     html.Br(""),
@@ -843,7 +843,7 @@ html.Div([
 
 html.Div([
 html.Div([ 
-    html.H2(children = "Tabela De Desempenho Por Pessoa / Hora",
+    html.H2(children = "UPH por Pessoa / Hora (Canal)",
         style = {'textAlign' : 'center',}),
 
     html.Br(""),
@@ -898,7 +898,7 @@ html.Div([
                                            'flexDirection': 'row'}),
     
         html.Div([
-            html.H3('Produção Por Operador / Hora'),
+            html.H3('Produção Por Pessoa / Hora'),
             dcc.Graph(id='chart2', figure=figure4)
         ], className="six columns", style= {'width': '100%', 'textAlign' : 'center',
                                             'marginBottom': 50, 'marginTop': 25,
@@ -918,7 +918,7 @@ html.Div([
 
 html.Div([
 html.Div([ 
-    html.H2(children = "Tipo de Produto Por Cut Off",
+    html.H2(children = "Visão Geral - Tipo de Produto Por Cut Off",
         style = {'textAlign' : 'center',}),
 
     html.Br(""),
@@ -967,7 +967,7 @@ html.Div([
 html.Div([
 html.Div([ 
 
-        html.H3(children = "Produção Por Hora (Canal)", 
+        html.H3(children = "Visão Geral - Produção Por Hora (Canal)", 
         style = {'textAlign' : 'center',}),
 
     html.Br(""),
@@ -1031,7 +1031,7 @@ html.Div([
 html.Div([
     html.Div([ 
 
-            html.H3(children = "Produção Por Hora (Operador)",
+            html.H3(children = "Produção Por Hora (Pessoa)",
             style = {'textAlign' : 'center',}),
 
             html.Br(""),
@@ -1117,7 +1117,7 @@ html.Div([
 html.Div([
     html.Div([ 
 
-            html.H3(children = "Unidades Recebidas Vs Processadas por Hora",
+            html.H3(children = "Unidades Recebidas Vs Processadas por Hora (Drop)",
             style = {'textAlign' : 'center',}),
 
             html.Br(""),
@@ -1146,7 +1146,7 @@ html.Div([
 html.Div([
     html.Div([ 
 
-            html.H3(children = "Unidades Recebidas Vs Processadas por Hora",
+            html.H3(children = "Unidade Produzidas Por Pessoa (Hora)",
             style = {'textAlign' : 'center',}),
 
             html.Br(""),
