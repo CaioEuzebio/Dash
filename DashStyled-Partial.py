@@ -305,6 +305,12 @@ def parse_contents(contents, filename, date):
             tabelaback['Horas Disp'] = ''
             tabelaback['Delta Hora'] = 0
             tabelaback['Risco Aging'] = ''
+
+            #Prod by cut off
+
+            dfprod = df1.groupby(['Product Category', 'Cut Off Date', 'Cut Off Time']).sum()
+            dfprod.reset_index(inplace=True)
+            dfprod['Unidades Pendentes'] = dfprod['Qty'] - dfprod['UnidadesProcessadas']
         
             
             #tabelaordertype.drop(['UPH_BPI_vs_Perfil', 'Head_Disponível', 'ETA_BPI_vs_Head'], axis=1, inplace=True)
@@ -693,7 +699,7 @@ html.Div([
         
 html.Div([
 html.Div([ 
-    html.H2(children = "Para Gerenciamento de backlog",
+    html.H2(children = "Status Por Cut Off",
         style = {'textAlign' : 'center',}),
 
     html.Br(""),
@@ -765,7 +771,49 @@ html.Div([
     
 #Mos Prod hora estacao & prod hora operador/>
        
+
+#Tabela tipo produto por cut off<
+
+html.Div([
+html.Div([ 
+    html.H2(children = "Tipo de Produto Por Cut Off",
+        style = {'textAlign' : 'center',}),
+
+    html.Br(""),
+  
         
+    dash_table.DataTable(
+        id='table-prod',
+        columns=[{"name": i, "id": i} for i in dfprod.columns ],
+        data=dfprod.to_dict('records'),
+        editable=True,
+        style_table={'textAlign': 'center'},
+         style_as_list_view=True,
+        style_cell={'padding': '5px','fontSize': 12, 'textAlign': 'center'},
+        style_header={
+            'backgroundColor': 'Gainsboro',
+            'fontWeight': 'bold',
+            'fontSize': 12},
+
+
+    ),
+
+        ],style={'textAlign': 'center',
+                 'align-items': 'center',
+                 'fontSize': 12,
+                 'width': '100%',
+                 'display': 'block',
+                 'align-items': 'center',
+                 'justify-content': 'center',
+                'boxShadow': '0 0 14px 0 rgba(0, 0, 0, 0.2)',
+                 'padding': '30px 20px'}),
+    
+        ],style={'textAlign': 'center',
+                'marginTop': '15px',
+                'display': 'block'}),
+
+#Tabela tipo de produto por cur off/>       
+
 
         
         
